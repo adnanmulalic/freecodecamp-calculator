@@ -4,12 +4,17 @@ import Operand from './Operand'
 import Operator from './Operator'
 import * as operations from './operations'
 
+const initialCalculator = {
+  firstNumber: "", secondNumber: "", 
+  operator: "", input: "",
+  display: "", negativeNumber: false,
+}
+
+
 function App() {
-  const [calculator, setCalculator] = useState({
-    firstNumber: "", secondNumber: "", 
-    operator: "", input: "",
-    display: ""
-  });
+  const [calculator, setCalculator] = useState(initialCalculator);
+  let result = operations.operations(calculator.firstNumber, calculator.secondNumber, calculator.operator);
+
 
   const changeNumbers = (event)=> {
     setCalculator((prev) => ({...prev,
@@ -30,24 +35,56 @@ function App() {
   }
 
   const operate = (event)=> {
-    setCalculator((prev) => ({...prev,
-    operator: event.target.id,
-    display: prev.display.concat("", event.target.innerText)
-    }))
+  if (!calculator.display.match(/([(*\-)|(/\-)|(+\-)]{2}\s*$)/)) {
+    if (calculator.operator != "" && calculator.secondNumber != "") {
+      setCalculator((prev) => ({...prev,
+      display: prev.operator != "subtract" && prev.display.concat("", event.target.innerText),
+      firstNumber: result,
+      secondNumber: "",
+      operator: event.target.id
+      }))
+      
+    } else if (calculator.operator && event.target.id != "subtract") {
+      setCalculator((prev) => ({...prev,
+        operator: event.target.id,
+        display: prev.firstNumber.concat("", event.target.innerText)
+      }))
+      console.log("this ran")
+    }
+    else if (calculator.operator && event.target.id === "subtract") {
+      setCalculator((prev) => ({...prev,
+      display: prev.display.concat("", event.target.innerText),
+      secondNumber: prev.secondNumber.concat("-"),
+      negativeNumber: true
+      }))
+    }
+     else {
+      setCalculator((prev) => ({...prev,
+        operator: event.target.id,
+        display: prev.display.concat("", event.target.innerText)
+        }))
+        console.log("last else ran")
+    }
+  } 
   }
 
   function deliverResult() {
-    let result = operations.operations(calculator.firstNumber, calculator.secondNumber, calculator.operator);
     setCalculator({...calculator,
       display: result,
       firstNumber: result,
-      secondNumber: ""
+      secondNumber: "",
+      operator: ""
     })
+  }
+
+  function clearAll() {
+    setCalculator(initialCalculator);
   }
 
   console.log(calculator)
   return (
     <div>
+      <button onClick={clearAll} id='clear'>AC</button>
       <div onClick={changeNumbers}>
         <Operand number={0} id="zero" />
         <Operand number={1} id="one" />
@@ -57,6 +94,7 @@ function App() {
       <div onClick={operate}>
         <Operator operation="+" id="add" />
         <Operator operation="-" id="subtract" />
+        <Operator operation="*" id="multiply" />
       </div>
       <button onClick={deliverResult} id='result'>=</button>
       <p>Display: {calculator.display}</p>

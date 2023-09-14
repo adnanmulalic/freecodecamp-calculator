@@ -7,6 +7,9 @@ function operations(a, b, operator) {
         case "subtract":
             result = Number(a) - Number(b);
             return String(result);
+        case "multiply":
+            result = Number(a) * Number(b);
+            return String(result);
     }
 }
 

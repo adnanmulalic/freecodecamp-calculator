@@ -5,83 +5,62 @@ import Operator from './Operator'
 import * as operations from './operations'
 
 const initialCalculator = {
-  firstNumber: "", secondNumber: "", 
+  firstNumber: "", secondNumber: "",
   operator: "", input: "",
-  display: "", negativeNumber: false,
+  display: "", lastNumber: "",
 }
 
 
 function App() {
   const [calculator, setCalculator] = useState(initialCalculator);
-  let result = operations.operations(calculator.firstNumber, calculator.secondNumber, calculator.operator);
-
+  let anotherResult = calculator.display;
 
   const changeNumbers = (event)=> {
-    setCalculator((prev) => ({...prev,
-      input: prev.input.concat("", event.target.innerText),
-      display: prev.display.concat("", event.target.innerText)
-    }))
-    setCalculator((prev) => {
-      if (prev.operator === "") {
-        return {...prev,
-            firstNumber: prev.firstNumber.concat("", event.target.innerText),
-          }
-      } else {
-        return {...prev,
-          secondNumber: prev.secondNumber.concat("", event.target.innerText),
-        }
-      }
-    });
+    if (event.target.id === "zero" && !calculator.display.match(/^0{1}/)) {
+      setCalculator((prev) => ({...prev,
+        display: prev.display.concat("", event.target.innerText) // set only one zero at the start if zero is clicked
+      }));
+    } else {
+      if (calculator.display.match(/^0{1}/) && event.target.id != "decimal") { // replace zero at start with number if no decimal point
+        setCalculator({...calculator, display: calculator.display.match(/^0{1}\./) ? calculator.display.concat("", event.target.innerText) : event.target.innerText})
+      } else if(event.target.id === "decimal" && (calculator.display.match(/\d+$/) && !calculator.display.match(/\d+[.]\d+$/))) {  // check multiple decimal click to prevent multiple decimals
+        setCalculator((prev) => ({...prev, display: prev.display.concat("", event.target.innerText)}))
+      } else if (event.target.id != "decimal"){ // if not decimal add numbers
+        setCalculator((prev) => ({...prev, display: prev.display.concat("", event.target.innerText)}))
+      } 
+    }
   }
 
   const operate = (event)=> {
-  if (!calculator.display.match(/([(*\-)|(/\-)|(+\-)]{2}\s*$)/)) {
-    if (calculator.operator != "" && calculator.secondNumber != "") {
-      setCalculator((prev) => ({...prev,
-      display: prev.operator != "subtract" && prev.display.concat("", event.target.innerText),
-      firstNumber: result,
-      secondNumber: "",
-      operator: event.target.id
-      }))
-      
-    } else if (calculator.operator && event.target.id != "subtract") {
-      setCalculator((prev) => ({...prev,
-        operator: event.target.id,
-        display: prev.firstNumber.concat("", event.target.innerText)
-      }))
-      console.log("this ran")
+    if ((calculator.display === "" || calculator.display === "-" ) && event.target.id === "subtract") { //no number and want to make negative number
+      setCalculator({...calculator, display: event.target.innerText});
+    } else if (calculator.display.match(/^-?\d+/))  { // condition to prevent from changing first subtract symbol
+      if (calculator.display.match(/[-+*/]{2}$/)) {//replace operator if already 2 operaters inputed
+      setCalculator((prev) => ({...prev, display: prev.display.slice(0, -2).concat("", event.target.innerText)}));
     }
-    else if (calculator.operator && event.target.id === "subtract") {
-      setCalculator((prev) => ({...prev,
-      display: prev.display.concat("", event.target.innerText),
-      secondNumber: prev.secondNumber.concat("-"),
-      negativeNumber: true
-      }))
+      else if (calculator.display.match(/[-+*/]{1}$/) && event.target.id != "subtract") { //replace operator if not subtract for negative number
+      setCalculator((prev) => ({...prev, display: prev.display.slice(0, -1).concat("", event.target.innerText)}));
     }
-     else {
-      setCalculator((prev) => ({...prev,
-        operator: event.target.id,
-        display: prev.display.concat("", event.target.innerText)
-        }))
-        console.log("last else ran")
+      else if (calculator.display.match(/[-+*/]{1}$/) && event.target.id === "subtract"){ //add negativ operator for negative number
+      setCalculator((prev) => ({...prev, display: prev.display.concat("", event.target.innerText)}));
     }
-  } 
+      else if (calculator.display.match(/-?\d*\.?\d/)) {// add operator
+      setCalculator((prev) => ({...prev, display: prev.display.concat("", event.target.innerText)}));
+    }
+    }
+    
   }
 
   function deliverResult() {
     setCalculator({...calculator,
-      display: result,
-      firstNumber: result,
-      secondNumber: "",
-      operator: ""
+      display: eval(calculator.display).toString(),
     })
   }
 
   function clearAll() {
     setCalculator(initialCalculator);
   }
-
-  console.log(calculator)
+  
   return (
     <div>
       <button onClick={clearAll} id='clear'>AC</button>
@@ -90,23 +69,22 @@ function App() {
         <Operand number={1} id="one" />
         <Operand number={2} id="two" />
         <Operand number={3} id="three" />
+        <Operand number="." id="decimal" />
       </div>
       <div onClick={operate}>
         <Operator operation="+" id="add" />
         <Operator operation="-" id="subtract" />
         <Operator operation="*" id="multiply" />
+        <Operator operation="/" id="divide" />
       </div>
       <button onClick={deliverResult} id='result'>=</button>
       <p>Display: {calculator.display}</p>
       <label htmlFor='input'>Input: </label>
       <input type='number' id='input' name='input' value={calculator.input} readOnly></input>
       <p>Result: {}</p>
+      <p>Another result: {calculator.lastNumber} </p>
     </div>
   )
 }
 
 export default App
-
-{/* <button id='zero'>0</button><button id='one'>1</button><button id='two'>2</button><button id='3'>3</button>
-      <button id='4'>4</button><button id='5'>5</button><button id='6'>6</button>
-      <button id='7'>7</button><button id='8'>8</button><button id='9'>9</button> */}

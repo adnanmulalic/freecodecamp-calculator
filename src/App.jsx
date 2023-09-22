@@ -2,12 +2,10 @@ import { useState } from 'react'
 import './App.css'
 import Operand from './Operand'
 import Operator from './Operator'
-import * as operations from './operations'
+import {shuntingyardalgo} from './shuntingyardalgo';
 
 const initialCalculator = {
-  firstNumber: "", secondNumber: "",
-  operator: "", input: "",
-  display: "", lastNumber: "",
+  display: ""
 }
 
 
@@ -54,13 +52,15 @@ function App() {
   function deliverResult() {
     setCalculator({...calculator,
       display: eval(calculator.display).toString(),
-    })
+    });
+    shuntingyardalgo(calculator.display);
   }
 
   function clearAll() {
     setCalculator(initialCalculator);
   }
   
+
   return (
     <div>
       <button onClick={clearAll} id='clear'>AC</button>
@@ -81,8 +81,7 @@ function App() {
       <p>Display: {calculator.display}</p>
       <label htmlFor='input'>Input: </label>
       <input type='number' id='input' name='input' value={calculator.input} readOnly></input>
-      <p>Result: {}</p>
-      <p>Another result: {calculator.lastNumber} </p>
+      <p>Another result:  </p>
     </div>
   )
 }

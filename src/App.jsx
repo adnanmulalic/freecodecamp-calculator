@@ -11,7 +11,6 @@ const initialCalculator = {
 
 function App() {
   const [calculator, setCalculator] = useState(initialCalculator);
-  let anotherResult = calculator.display;
 
   const changeNumbers = (event)=> {
     if (event.target.id === "zero" && !calculator.display.match(/^0{1}/)) {
@@ -69,6 +68,12 @@ function App() {
         <Operand number={1} id="one" />
         <Operand number={2} id="two" />
         <Operand number={3} id="three" />
+        <Operand number={4} id="four" />
+        <Operand number={5} id="five" />
+        <Operand number={6} id="six" />
+        <Operand number={7} id="seven" />
+        <Operand number={8} id="eight" />
+        <Operand number={9} id="nine" />
         <Operand number="." id="decimal" />
       </div>
       <div onClick={operate}>

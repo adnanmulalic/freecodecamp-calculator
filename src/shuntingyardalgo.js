@@ -17,38 +17,85 @@ function operations(a, b, operator) {
 }
 
 function shuntingyardalgo(expression) {
-    const operators = [];
-    const operands = [];
+    let operators = [];
+    let operands = [];
+    const postfix = [];
     let num = "";
     for (let i = 0; i < expression.length; i++) {
         if (expression[i].match(/[\d.]/)) {
             num += expression[i];
         if (((i === 1 && operators[0] === "-"))) {
-            operators.shift();
+            operators.pop();
+            postfix.pop();
             num = "-" + num;
         }
-        if (operators.length >= 2 && operators[0] === "-" && expression[i - 2].match(/[-+*/]/)) {
-            operators.shift();
+        if (operators.length >= 2 && expression[i - 1] === "-" && expression[i - 2].match(/[-+*/]/)) {
+            operators.pop();
+            postfix.pop();
             num = "-" + num;
+            console.log("negative num")
         }
         } else {
             num != "" && operands.push(num);
+            num != "" && postfix.push(num);
             num = "";
-            operators.unshift(expression[i]);
+            if (operators.length < 1) {
+                operators.push(expression[i]);
+            } else {
+            if (expression[i].match(/[*/]/)) {
+                    for (let j = 0; j < operators.length; j++) {
+                        if (operators[j].match(/[-+]/)) {
+                            operators.splice(j, 0, expression[i]);
+                            break;
+                        }
+                    }
+                    console.log(expression[i])
+                } else {
+                    operators.push(expression[i]);
+                }
+            }
+            !expression[i].match(/[\d]/) && postfix.push(expression[i]);
         }
-    }
-    operands.push(num);
+        }
+        postfix.push(num);
+        operands.push(num);
+        let operatorStack = [];
+        let output = [];
+        postfix.forEach(token => {
+            if (token.match(/^-?\d+\.?\d*$/)) {
+                output.push(token);
+            } else if (token.match(/[-+/*]/)) {
+            if (token.match(/[-+]/)) {
+                while (operatorStack.length > 0 ) {
+                    output.push(operatorStack[0]);
+                    operatorStack.shift();
+                }
+                operatorStack.push(token);
+                }
+            else {
+                operatorStack.unshift(token);
+                }
+            }
+            console.log(token)
+        })
 
-    operators.forEach(operator => {
-            let i = operands.length - 1;
-            let a = operands[i]; let b = operands[i - 1];
-            operands.pop(); operands.pop();
-            operands.push(operations(a, b, operator));
-            console.log(operations(a, b, operator))
-    })
+        if (operatorStack.length > 0){
+            output = [...output, ...operatorStack];
+        }
+        console.log(operands, operators)
+        console.log(postfix)
+        console.log(output)
 
-    console.log(num)
-    console.log(operands);
+
+
+    // operators.forEach(operator => {
+    //         let i = operands.length - 1;
+    //         let a = operands[i - 1]; let b = operands[i];
+    //         operands.pop(); operands.pop();
+    //         operands.push(operations(a, b, operator));
+    //         //console.log(operations(a, b, operator))
+    // })
+
 }
 
 export {shuntingyardalgo}

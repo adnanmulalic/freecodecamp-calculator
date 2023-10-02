@@ -2,13 +2,13 @@ function operations(a, b, operator) {
     let result = 0;
     switch (operator) {
         case "+":
-            result = Number(a) + Number(b);
+            result = parseFloat(a) + parseFloat(b);
             return String(result);
         case "-":
-            result = Number(a) - Number(b);
+            result = parseFloat(a) - parseFloat(b);
             return String(result);
         case "*":
-            result = Number(a) * Number(b);
+            result = parseFloat(a) * parseFloat(b);
             return String(result);
         case "/":
             result = parseFloat(a) / parseFloat(b);
@@ -35,6 +35,7 @@ function shuntingyardalgo(expression) {
             num = "-" + num;
             console.log("negative num")
         }
+        
         } else {
             num != "" && operands.push(num);
             num != "" && postfix.push(num);
@@ -82,8 +83,24 @@ function shuntingyardalgo(expression) {
         if (operatorStack.length > 0){
             output = [...output, ...operatorStack];
         }
-        console.log(operands, operators)
-        console.log(postfix)
+
+        console.log(output)
+        let i = 0;
+        while (output.length > 1) {
+            if (output[i].length === 1 && output[i].match(/[-+/*]/)) {
+                let a = output[i - 2]; let b = output[i - 1];
+                let result = operations(a, b, output[i]);
+                console.log(result)
+                output.splice(i - 2, 3, result);
+                console.log(output);
+                i = 0;
+            } else {
+                i++;
+            }
+        }
+
+        //console.log(operands, operators)
+        //console.log(postfix)
         console.log(output)
 
 

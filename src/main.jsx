@@ -8,3 +8,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <App />
   </React.StrictMode>,
 )
+
+// freecodecamp test pass under react 17 render
+// import React from 'react'
+// import ReactDOM from 'react-dom'
+// import App from './App.jsx'
+// import './index.css'
+
+// ReactDOM.render(<App/>, document.getElementById('root'))

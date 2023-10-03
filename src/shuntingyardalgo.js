@@ -98,21 +98,7 @@ function shuntingyardalgo(expression) {
                 i++;
             }
         }
-
-        //console.log(operands, operators)
-        //console.log(postfix)
         console.log(output)
-
-
-
-    // operators.forEach(operator => {
-    //         let i = operands.length - 1;
-    //         let a = operands[i - 1]; let b = operands[i];
-    //         operands.pop(); operands.pop();
-    //         operands.push(operations(a, b, operator));
-    //         //console.log(operations(a, b, operator))
-    // })
-
 }
 
 export {shuntingyardalgo}

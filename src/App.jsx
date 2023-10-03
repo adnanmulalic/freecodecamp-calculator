@@ -5,9 +5,8 @@ import Operator from './Operator'
 import {shuntingyardalgo} from './shuntingyardalgo';
 
 const initialCalculator = {
-  display: ""
+  display: "0"
 }
-
 
 function App() {
   const [calculator, setCalculator] = useState(initialCalculator);
@@ -63,7 +62,7 @@ function App() {
   return (
     <div>
       <button onClick={clearAll} id='clear'>AC</button>
-      <div onClick={changeNumbers}>
+      <div onClick={changeNumbers} id='numbers'>
         <Operand number={0} id="zero" />
         <Operand number={1} id="one" />
         <Operand number={2} id="two" />
@@ -76,14 +75,15 @@ function App() {
         <Operand number={9} id="nine" />
         <Operand number="." id="decimal" />
       </div>
-      <div onClick={operate}>
+      <div onClick={operate} id='operators'>
         <Operator operation="+" id="add" />
         <Operator operation="-" id="subtract" />
         <Operator operation="*" id="multiply" />
         <Operator operation="/" id="divide" />
       </div>
-      <button onClick={deliverResult} id='result'>=</button>
-      <p>Display: {calculator.display}</p>
+      <button onClick={deliverResult} id='equals'>=</button>
+      <p>Display</p>
+      <p id='display'>{calculator.display}</p>
       <label htmlFor='input'>Input: </label>
       <input type='number' id='input' name='input' value={calculator.input} readOnly></input>
       <p>Another result:  </p>

@@ -33,7 +33,6 @@ function shuntingyardalgo(expression) {
             operators.pop();
             postfix.pop();
             num = "-" + num;
-            console.log("negative num")
         }
         
         } else {
@@ -50,7 +49,6 @@ function shuntingyardalgo(expression) {
                             break;
                         }
                     }
-                    console.log(expression[i])
                 } else {
                     operators.push(expression[i]);
                 }
@@ -77,28 +75,25 @@ function shuntingyardalgo(expression) {
                 operatorStack.unshift(token);
                 }
             }
-            console.log(token)
         })
 
         if (operatorStack.length > 0){
             output = [...output, ...operatorStack];
         }
-
-        console.log(output)
         let i = 0;
         while (output.length > 1) {
             if (output[i].length === 1 && output[i].match(/[-+/*]/)) {
                 let a = output[i - 2]; let b = output[i - 1];
                 let result = operations(a, b, output[i]);
-                console.log(result)
                 output.splice(i - 2, 3, result);
-                console.log(output);
                 i = 0;
             } else {
                 i++;
             }
         }
-        console.log(output)
+        console.log(output[0])
+        return output[0];
+        // return Math.round(output[0] * 10000) / 10000; rounded to 4 decimals
 }
 
 export {shuntingyardalgo}

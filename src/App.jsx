@@ -11,6 +11,22 @@ const initialCalculator = {
 function App() {
   const [calculator, setCalculator] = useState(initialCalculator);
 
+  function calculate(event) {
+    if (event.target.id === "clear") {
+      clearAll();
+    } else if (event.target.id === "deleteOne") {
+      deleteOne();
+    } else if (event.target.id === "equals") {
+      deliverResult();
+    } else if (event.target.className === "operand") {
+      changeNumbers(event);
+    } else if (event.target.className === "operator") {
+      operate(event);
+    } else {
+      console.log("nothing ever works");
+    }
+  }
+
   const changeNumbers = (event)=> {
     if (event.target.id === "zero" && !calculator.display.match(/^0{1}/)) {
       setCalculator((prev) => ({...prev,
@@ -28,7 +44,7 @@ function App() {
   }
 
   const operate = (event)=> {
-    if ((calculator.display === "" || calculator.display === "-" ) && event.target.id === "subtract") { //no number and want to make negative number
+    if ((calculator.display === "0" || calculator.display === "-" ) && event.target.id === "subtract") { //no number and want to make negative number
       setCalculator({...calculator, display: event.target.innerText});
     } else if (calculator.display.match(/^-?\d+/))  { // condition to prevent from changing first subtract symbol
       if (calculator.display.match(/[-+*/]{2}$/)) {//replace operator if already 2 operaters inputed
@@ -44,14 +60,23 @@ function App() {
       setCalculator((prev) => ({...prev, display: prev.display.concat("", event.target.innerText)}));
     }
     }
-    
   }
 
   function deliverResult() {
-    setCalculator({...calculator,
-      display: eval(calculator.display).toString(),
+    setCalculator({ //...calculator,
+      display: (calculator.display.length >= 3 && !calculator.display[calculator.display.length - 1].match(/[-+*/]/)) ? shuntingyardalgo(calculator.display): calculator.display,
     });
-    shuntingyardalgo(calculator.display);
+    //eval(calculator.display).toString() this is "easy" way
+  }
+
+  function deleteOne() {
+    if (calculator.display.length > 1){
+      setCalculator({
+        display: calculator.display.slice(0, calculator.display.length - 1)
+      });
+    } else {
+      clearAll();
+    }
   }
 
   function clearAll() {
@@ -60,33 +85,28 @@ function App() {
   
 
   return (
-    <div>
-      <button onClick={clearAll} id='clear'>AC</button>
-      <div onClick={changeNumbers} id='numbers'>
-        <Operand number={0} id="zero" />
-        <Operand number={1} id="one" />
-        <Operand number={2} id="two" />
-        <Operand number={3} id="three" />
-        <Operand number={4} id="four" />
-        <Operand number={5} id="five" />
-        <Operand number={6} id="six" />
+    <div id='calculator'>
+      <p id='display'>{calculator.display}</p>
+      <div onClick={calculate} id='calc-buttons'>
         <Operand number={7} id="seven" />
         <Operand number={8} id="eight" />
         <Operand number={9} id="nine" />
+        <Operand number={4} id="four" />
+        <Operand number={5} id="five" />
+        <Operand number={6} id="six" />
+        <Operand number={1} id="one" />
+        <Operand number={2} id="two" />
+        <Operand number={3} id="three" />
+        <Operand number={0} id="zero" />
         <Operand number="." id="decimal" />
-      </div>
-      <div onClick={operate} id='operators'>
         <Operator operation="+" id="add" />
         <Operator operation="-" id="subtract" />
         <Operator operation="*" id="multiply" />
         <Operator operation="/" id="divide" />
+        <button id='clear'>AC</button>
+        <button id='deleteOne' className="material-symbols-outlined">backspace</button>
+        <button id='equals'>=</button>
       </div>
-      <button onClick={deliverResult} id='equals'>=</button>
-      <p>Display</p>
-      <p id='display'>{calculator.display}</p>
-      <label htmlFor='input'>Input: </label>
-      <input type='number' id='input' name='input' value={calculator.input} readOnly></input>
-      <p>Another result:  </p>
     </div>
   )
 }

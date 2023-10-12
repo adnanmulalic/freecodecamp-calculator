@@ -91,9 +91,7 @@ function shuntingyardalgo(expression) {
                 i++;
             }
         }
-        console.log(output[0])
-        return output[0];
-        // return Math.round(output[0] * 10000) / 10000; rounded to 4 decimals
+        return Math.round(output[0] * 10000) / 10000; //rounded to 4 decimals
 }
 
 export {shuntingyardalgo}

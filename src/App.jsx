@@ -28,14 +28,16 @@ function App() {
   }
 
   const changeNumbers = (event)=> {
-    if (event.target.id === "zero" && !calculator.display.match(/^0{1}/)) {
+    if (event.target.id === "zero" && calculator.display.match(/^0{1}/)) {
       setCalculator((prev) => ({...prev,
-        display: prev.display.concat("", event.target.innerText) // set only one zero at the start if zero is clicked
+        display: "0" // set only one zero at the start if zero is clicked
       }));
     } else {
-      if (calculator.display.match(/^0{1}/) && event.target.id != "decimal") { // replace zero at start with number if no decimal point
+      if (calculator.display.match(/^0{1}/) && event.target.id != "decimal" && !calculator.display.match(/[-+/*]{1}$/)) { // replace zero at start with number if no decimal point
         setCalculator({...calculator, display: calculator.display.match(/^0{1}\./) ? calculator.display.concat("", event.target.innerText) : event.target.innerText})
-      } else if(event.target.id === "decimal" && (calculator.display.match(/\d+$/) && !calculator.display.match(/\d+[.]\d+$/))) {  // check multiple decimal click to prevent multiple decimals
+      } else if (calculator.display.match(/[-+/*]0{1}$/)){
+        setCalculator({...calculator, display: event.target.id === "zero" ? calculator.display : calculator.display.slice(0, -1).concat("", event.target.innerText) })
+      } else if (event.target.id === "decimal" && (calculator.display.match(/\d+$/) && !calculator.display.match(/\d+[.]\d+$/))) {  // check multiple decimal click to prevent multiple decimals
         setCalculator((prev) => ({...prev, display: prev.display.concat("", event.target.innerText)}))
       } else if (event.target.id != "decimal"){ // if not decimal add numbers
         setCalculator((prev) => ({...prev, display: prev.display.concat("", event.target.innerText)}))
@@ -53,7 +55,7 @@ function App() {
       else if (calculator.display.match(/[-+*/]{1}$/) && event.target.id != "subtract") { //replace operator if not subtract for negative number
       setCalculator((prev) => ({...prev, display: prev.display.slice(0, -1).concat("", event.target.innerText)}));
     }
-      else if (calculator.display.match(/[-+*/]{1}$/) && event.target.id === "subtract"){ //add negativ operator for negative number
+      else if (calculator.display.match(/[-+*/]{1}$/) && event.target.id === "subtract"){ //add negative operator for negative number
       setCalculator((prev) => ({...prev, display: prev.display.concat("", event.target.innerText)}));
     }
       else if (calculator.display.match(/-?\d*\.?\d/)) {// add operator
@@ -64,7 +66,7 @@ function App() {
 
   function deliverResult() {
     setCalculator({ //...calculator,
-      display: (calculator.display.length >= 3 && !calculator.display[calculator.display.length - 1].match(/[-+*/]/)) ? shuntingyardalgo(calculator.display): calculator.display,
+      display: (calculator.display.length >= 3 && !calculator.display[calculator.display.length - 1].match(/[-+*/]/)) ? shuntingyardalgo(calculator.display).toString() : calculator.display,
     });
     //eval(calculator.display).toString() this is "easy" way
   }
@@ -86,7 +88,7 @@ function App() {
 
   return (
     <div id='calculator'>
-      <p id='display'>{calculator.display}</p>
+      <div id='display'>{calculator.display}</div>
       <div onClick={calculate} id='calc-buttons'>
         <Operand number={7} id="seven" />
         <Operand number={8} id="eight" />

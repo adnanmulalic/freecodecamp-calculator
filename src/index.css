@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color:#213547;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -75,7 +75,6 @@ button:active {
 
 #calculator {
   width: 250px;
-  border: 1px solid white;
   padding: 1em;
   background-color: rgb(235, 230, 221);
   border-radius: 10px;
@@ -91,15 +90,16 @@ button:active {
 #display {
   color: #1a1a1a;
   background-color: #f9f9f9;
+  width: 250px;
   margin: 0.4em 0;
   font-size: 1.3em;
   height: 100px;
-  text-align: center;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  overflow-x: hidden;
-  text-overflow: ellipsis;
+  overflow-x: auto;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
 }
 
 #divide {
@@ -141,4 +141,18 @@ button:active {
   color: #f9f9f9;
   background-color: lightslategray;
   line-height: 40px;
+}
+
+#github-logo {
+  margin: 1em;
+  width: fit-content;
+  height: 3em;
+}
+
+footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.2em;
 }

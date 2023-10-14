@@ -3,6 +3,7 @@ import './App.css'
 import Operand from './Operand'
 import Operator from './Operator'
 import {shuntingyardalgo} from './shuntingyardalgo';
+import Footer from './Footer';
 
 const initialCalculator = {
   display: "0"
@@ -87,8 +88,9 @@ function App() {
   
 
   return (
+    <div className='app'>
     <div id='calculator'>
-      <div id='display'>{calculator.display}</div>
+      <div id='display'><p>{calculator.display}</p></div>
       <div onClick={calculate} id='calc-buttons'>
         <Operand number={7} id="seven" />
         <Operand number={8} id="eight" />
@@ -109,6 +111,8 @@ function App() {
         <button id='deleteOne' className="material-symbols-outlined">backspace</button>
         <button id='equals'>=</button>
       </div>
+    </div>
+    <Footer />
     </div>
   )
 }
